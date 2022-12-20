@@ -9,8 +9,6 @@ morgan = require('morgan')
 mongoose = require('mongoose')
 Models = require('./models.js');
 
-const {check, validationResult} = require('express-validator');
-
 const app = express();
 
 //body-parser middleware, must be above any other endpoint middleware
@@ -117,20 +115,7 @@ app.get('/movies/directors/:directorName', passport.authenticate('jwt', {session
 });
 
 //POST a new user
-app.post('/users', 
-[
-  check('UserName', 'Username is required').isLength({min: 5}),
-  check('UserName', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
-  check('Password', 'Password is required').not().isEmpty(),
-  check('Email', 'Email does not appear to be valid').isEmail()
-],  
-(req,res) => {
-  let errors = validationResult(req);
-
-  if(!errors.isEmpty()) {
-    return res.status(422).json({errors: errors.array()});
-  }
-  
+app.post('/users', (req,res) => {
   let hashedPassword = Users.hashPassword(req.body.Password);
   Users.findOne({UserName: req.body.UserName})
   .then((user) => {

@@ -45,6 +45,22 @@
         <td>A JSON object containing the full list of movie titles</td>
       </tr>
       <tr>
+        <td>Return a list of all users</td>
+        <td>/users</td>
+        <td>GET</td>
+        <td>n/a</td>
+        <td>n/a</td>
+        <td>A JSON object containing the full list of users</td>
+      </tr>
+      <tr>
+        <td>Get one user by name</td>
+        <td>/users/:UserName</td>
+        <td>GET</td>
+        <td>:UserName</td>
+        <td>n/a</td>
+        <td>A JSON object containing one user</td>
+      </tr>
+      <tr>
         <td>Return data (description, genre, director, image URL, whether it's featured or not) about a single movie by title to the user</td>
         <td>/movies/:title</td>
         <td>GET</td>
@@ -76,41 +92,46 @@
         <td>/users</td>
         <td>POST</td>
         <td>n/a</td>
-        <td>A JSON object containing the users name {"name": "usersName"}</td>
-        <td>A JSON object containing the users name and a generated id {"name": "usersName", "id": "randomID"}</td>
+        <td>A JSON object containing the users info including {UserName: req.body.UserName, Password: req.body.Password,Email: req.body.Email, Birthdate: req.body.Birthdate}
+        </td>
+        <td>A JSON object containing the provided users info and a generated id {UserName: req.body.UserName, Password: req.body.Password,Email: req.body.Email, Birthdate: req.body.Birthdate, _id": ObjectId}
+        </td>
       </tr>
       <tr>
-        <td>Allow users to update their user info (username)
+        <td>Allow users to update their user info
         </td>
-        <td>/users/:id</td>
+        <td>/users/:UserName</td>
         <td>PUT</td>
-        <td>:id</td>
-        <td>A JSON object containing the updated user name {"name": "updatedName"} </td>
-        <td>A JSON object containing the updated user info {"name": "updatedUserName", "id":"userId"}</td>
+        <td>:UserName</td>
+        <td>A JSON object containing the users updated info including {UserName: req.body.UserName, Password: req.body.Password,Email: req.body.Email, Birthdate: req.body.Birthdate}
+        </td>
+        <td>A JSON object containing the users updated info including {UserName: req.body.UserName, Password: req.body.Password,Email: req.body.Email, Birthdate: req.body.Birthdate}
+        </td>
       </tr>
       <tr>
         <td>Allow users to add a movie to their list of favorites (showing only a text that a movie has been added</td>
-        <td>/users/:id/:movieTitle</td>
+        <td>/users/:UserName/movies/:movieId</td>
         <td>POST</td>
-        <td>:id, :movieTitle</td>
+        <td>:UserName, :movieId</td>
         <td>n/a</td>
         <td>A message stating that "movieTitle" has been added to "userId's" list of favorites</td>
       </tr>
       <tr>
         <td>Allow users to remove a movie from their list of favorites (showing only a text that a movie has been removed</td>
-        <td>/users/:id/:movieTitle</td>
+        <td>/users/:UserName/movies/:movieId</td>
         <td>DELETE</td>
-        <td>:id, :movieTitle</td>
+        <td>:UserName, :movieId</td>
         <td>n/a</td>
         <td>A message stating that "movieTitle" has been deleted from "userId's" list of favorites</td>
       </tr>
       <tr>
         <td>Allow existing users to deregister (showing only a text that a user email has been removed</td>
-        <td>/users/:id</td>
+        <td>/users/:UserName</td>
         <td>DELETE</td>
-        <td>:id</td>
+        <td>:UserName</td>
         <td>n/a</td>
-        <td>A massage stating that users email has been removed from the list of users</td>
+        <td>A massage stating that users email has been removed from the list of users
+        </td>
       </tr>
     </tbody>
   </table>

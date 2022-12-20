@@ -15,6 +15,10 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+//require cors to control which domains have access to the API server
+const cors = require('cors');
+app.use(cors());
+
 //import auth.js
 let auth = require('./auth')(app);//(app) insures that express is available in auth.js
 
@@ -112,6 +116,7 @@ app.get('/movies/directors/:directorName', passport.authenticate('jwt', {session
 
 //POST a new user
 app.post('/users', (req,res) => {
+  let hashedPassword = Users.hashPassword(req.body.Password);
   Users.findOne({UserName: req.body.UserName})
   .then((user) => {
     if(user) {
@@ -119,7 +124,7 @@ app.post('/users', (req,res) => {
     } else {
       Users.create({
         UserName: req.body.UserName,
-        Password: req.body.Password,
+        Password: hashedPassword,
         Email: req.body.Email,
         Birthdate: req.body.Birthdate
       })
@@ -140,10 +145,11 @@ app.post('/users', (req,res) => {
 
 //Allow users to update account info
 app.put('/users/:UserName', passport.authenticate('jwt', {session: false}), (req,res) => {
+  let hashedPassword = Users.hashPassword(req.body.Password);
   Users.findOneAndUpdate({UserName: req.params.UserName}, {
     $set: {
       UserName: req.body.UserName,
-      Password: req.body.Password,
+      Password: hashedPassword,
       Email: req.body.Email,
       Birthdate: req.body.Birthdate
     }

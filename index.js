@@ -142,7 +142,7 @@ app.post('/users',
   check('Email', 'Email does not appear to be valid').isEmail()
 ],
 (req,res) => {
-  
+
   // check validation object for errors
   let errors = validationResult(req);
 
@@ -279,6 +279,7 @@ app.use((err, req, res, next) => {
 app.use('/public', express.static('./public'));
 
 // listen for requests
-app.listen(8080, () => {
-  console.log('Your app is listening on port 8080.');
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0', () => {
+  console.log('Listening on Port' + port);
 });

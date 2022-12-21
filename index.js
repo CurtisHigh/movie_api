@@ -15,6 +15,27 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+//cors set to allow requests from all origins
+const cors = require('cors');
+app.use(cors());
+
+// how to set up cors to limit accept specific origins
+// create a list of allowed domains
+// let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+
+// compare the allowed domains to any incoming request from domains attempting to access the API
+// app.use(cors({
+//   origin: (origin, callback) => {
+//     if(!origin) return callback(null, true);
+//     if(allowedOrigins.index.Of(origin) === -1) {
+//       //if a specific ofigin isn't found on the list of allowed origins
+//       let message = 'The CORS policy for this application doesn\'t allow access from origin ' + origin;
+//       return callback(new Error(message), false);
+//     }
+//     return callback(null, true);
+//   }
+// }));
+
 //import auth.js
 let auth = require('./auth')(app);//(app) insures that express is available in auth.js
 
@@ -112,6 +133,7 @@ app.get('/movies/directors/:directorName', passport.authenticate('jwt', {session
 
 //POST a new user
 app.post('/users', (req,res) => {
+  let hashedPassword = Users.hashPassword(req.body.Password);
   Users.findOne({Username: req.body.Username})
   .then((user) => {
     if(user) {
@@ -119,7 +141,7 @@ app.post('/users', (req,res) => {
     } else {
       Users.create({
         Username: req.body.Username,
-        Password: req.body.Password,
+        Password: hashedPassword,
         Email: req.body.Email,
         Birthdate: req.body.Birthdate
       })
@@ -140,10 +162,11 @@ app.post('/users', (req,res) => {
 
 //Allow users to update account info
 app.put('/users/:Username', passport.authenticate('jwt', {session: false}), (req,res) => {
+  let hashedPassword = Users.hashPassword(req.body.Password);
   Users.findOneAndUpdate({Username: req.params.Username}, {
     $set: {
       Username: req.body.Username,
-      Password: req.body.Password,
+      Password: hashedPassword,
       Email: req.body.Email,
       Birthdate: req.body.Birthdate
     }

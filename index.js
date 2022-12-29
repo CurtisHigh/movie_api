@@ -51,7 +51,11 @@ const Users = Models.User;
 
 //allows mongoose to connect to the myFlixDB database
 //{ useNewUrlParser: true, useUnifiedTopology: true } required to avoid deprecation warnings 
-mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
+//local DB connection
+//mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
+
+//remote DB connection
+mongoose.connect( process.env.CONNECTION_URI , { useNewUrlParser: true, useUnifiedTopology: true });
 
 // create a write stream (in append mode)
 // a ‘log.txt’ file is created in root directory
